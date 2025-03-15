@@ -28,28 +28,28 @@ class ProfController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-      $request->validate([
-        'nama' => 'required',
-        'deskripsi' => 'required|string',
-        'jurusan' => 'required|string',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
+    {
+        $request->validate([
+            'nama' => 'required',
+            'deskripsi' => 'required|string',
+            'jurusan' => 'required|string',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-    if ($request->hasFile('foto')) {
-        $image = $request->file('foto');
-        $path = $image->store('public/image');
-        $name = basename($path);
+        if ($request->hasFile('foto')) {
+            $image = $request->file('foto');
+            $path = $image->store('public/image');
+            $name = basename($path);
+        }
+
+        $profile = Profile::create([
+            'foto'=>$name,
+            'nama'=>$request->nama,
+            'jurusan'=>$request->jurusan,
+            'deskripsi'=>$request->deskripsi
+        ]); // Create a new Profile instance with the validated data
+        return redirect()->route('profile.index')->with('success', 'data berhasil di tambah');
     }
-
-    $profile = Profile::create([
-        'foto'=>$name,
-        'nama'=>$request->nama,
-        'jurusan'=>$request->jurusan,
-        'deskripsi'=>$request->deskripsi
-    ]); // Create a new Profile instance with the validated data
-    return redirect()->route('profile.index')->with('success', 'data berhasil di tambah');
-}
 
     /**
      * Display the specified resource.
